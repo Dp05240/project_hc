@@ -1,5 +1,10 @@
 -- ============================================================
--- 1. Add 'contractor' to profiles role check constraint
+-- 1. Migrate existing 'builder' values → 'property_manager' FIRST
+-- ============================================================
+update public.profiles set role = 'property_manager' where role = 'builder';
+
+-- ============================================================
+-- 2. Now swap the check constraint (no old values remain)
 -- ============================================================
 alter table public.profiles
   drop constraint if exists profiles_role_check;
@@ -7,11 +12,6 @@ alter table public.profiles
 alter table public.profiles
   add constraint profiles_role_check
     check (role in ('property_manager', 'inspector', 'contractor'));
-
--- ============================================================
--- 2. Migrate existing 'builder' values → 'property_manager'
--- ============================================================
-update public.profiles set role = 'property_manager' where role = 'builder';
 
 -- ============================================================
 -- 3. work_orders table
