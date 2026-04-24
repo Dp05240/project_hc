@@ -147,14 +147,14 @@ export function AppLayout() {
 
   return (
     <div className="min-h-svh bg-background">
-      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-white px-4 md:hidden">
+      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-white px-4 print:hidden md:hidden">
         <ProjectMark className="text-base" />
         <Button variant="ghost" size="icon" type="button" onClick={() => void handleSignOut()}>
           <LogOut className="h-5 w-5" />
         </Button>
       </header>
 
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-60 flex-col border-r border-border bg-white md:flex">
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-60 flex-col border-r border-border bg-white print:hidden md:flex">
         <div className="flex h-16 items-center border-b border-border px-6">
           <ProjectMark className="text-lg" />
         </div>
@@ -177,13 +177,13 @@ export function AppLayout() {
         </div>
       </aside>
 
-      <main className="pb-24 md:ml-60 md:pb-0">
-        <div className="mx-auto w-full max-w-content px-6 py-8 md:px-8">
+      <main className="pb-24 md:ml-60 md:pb-0 print:ml-0 print:pb-0">
+        <div className="mx-auto w-full max-w-content px-6 py-8 print:px-4 print:py-4 md:px-8">
           <Outlet />
         </div>
       </main>
 
-      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-white px-2 py-2 md:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-white px-2 py-2 print:hidden md:hidden">
         <div className="mx-auto flex max-w-content justify-between gap-1">
           <NavItems role={profile.role} mobile />
         </div>

@@ -31,6 +31,14 @@ export type InspectionType =
   | 'Interim'
   | '1-Year'
 
+export const INSPECTION_TYPE_OPTIONS: InspectionType[] = [
+  'Pre-Drywall',
+  'Home Demo',
+  '30-Day',
+  'Interim',
+  '1-Year',
+]
+
 export type PLOStatus =
   | 'Scheduled'
   | 'In Progress'
