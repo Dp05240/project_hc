@@ -22,7 +22,13 @@ export default defineConfig([
       'react-refresh/only-export-components': [
         'warn',
         {
-          allowExportNames: ['useAuth', 'AuthProvider', 'useToast', 'ToastProvider'],
+          allowExportNames: [
+            'useAuth',
+            'AuthProvider',
+            'useToast',
+            'ToastProvider',
+            'buttonVariants',
+          ],
         },
       ],
     },
