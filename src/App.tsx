@@ -18,8 +18,11 @@ import { CompleteInspectionPage } from '@/pages/inspector/CompleteInspectionPage
 import { InspectionPage } from '@/pages/inspector/InspectionPage'
 import { InspectorDashboard } from '@/pages/inspector/InspectorDashboard'
 import { ContractorWorkOrdersPage } from '@/pages/contractor/ContractorWorkOrdersPage'
+import { ContractorWorkOrderDetailPage } from '@/pages/contractor/ContractorWorkOrderDetailPage'
 import { ContractorPLOsPage } from '@/pages/contractor/ContractorPLOsPage'
 import { ContractorPLODetailPage } from '@/pages/contractor/ContractorPLODetailPage'
+import { InspectorsPage } from '@/pages/users/InspectorsPage'
+import { ContractorsPage } from '@/pages/users/ContractorsPage'
 import { NotFoundPage } from '@/pages/shared/NotFoundPage'
 import { QRScanPage } from '@/pages/shared/QRScanPage'
 
@@ -30,7 +33,7 @@ export default function App() {
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/" element={<HomeRedirect />} />
 
-      {/* ── Property Manager ────────────────────────────────────── */}
+      {/* ── Property Manager ──────────────────────────────── */}
       <Route
         path="/property-manager"
         element={
@@ -49,9 +52,11 @@ export default function App() {
         <Route path="plos/:id/workorder" element={<WorkOrderPage />} />
         <Route path="plos/:id/report" element={<ReportPage />} />
         <Route path="work-orders" element={<WorkOrdersListPage />} />
+        <Route path="users/inspectors" element={<InspectorsPage />} />
+        <Route path="users/contractors" element={<ContractorsPage />} />
       </Route>
 
-      {/* ── Inspector ───────────────────────────────────────────── */}
+      {/* ── Inspector ─────────────────────────────────────── */}
       <Route
         path="/inspector"
         element={
@@ -88,7 +93,7 @@ export default function App() {
         }
       />
 
-      {/* ── Contractor (view-only) ───────────────────────────────── */}
+      {/* ── Contractor (view-only) ────────────────────────── */}
       <Route
         path="/contractor"
         element={
@@ -99,6 +104,7 @@ export default function App() {
       >
         <Route index element={<ContractorWorkOrdersPage />} />
         <Route path="work-orders" element={<ContractorWorkOrdersPage />} />
+        <Route path="work-orders/:woId" element={<ContractorWorkOrderDetailPage />} />
         <Route path="plos" element={<ContractorPLOsPage />} />
         <Route path="plos/:id" element={<ContractorPLODetailPage />} />
       </Route>

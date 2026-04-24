@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Controller, useForm } from 'react-hook-form'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { z } from 'zod'
-import { useInspectors } from '@/hooks/useInspectors'
+import { useActiveInspectors } from '@/hooks/useInspectors'
 import { usePropertiesList } from '@/hooks/useProperties'
 import { generateNextPloId } from '@/lib/plo-id'
 import { supabase } from '@/lib/supabase'
@@ -50,7 +50,7 @@ export function NewPLOPage() {
   const { toast } = useToast()
 
   const propertiesQuery = usePropertiesList()
-  const inspectorsQuery = useInspectors()
+  const inspectorsQuery = useActiveInspectors()
 
   const [propertyQuery, setPropertyQuery] = useState('')
   const [dropdownOpen, setDropdownOpen] = useState(false)

@@ -6,6 +6,38 @@ export interface Profile {
   email: string
   role: UserRole
   phone?: string
+  /** Present for contractors */
+  trade_type?: TradeType
+  /** Present for contractors */
+  company_name?: string
+  /** Present for inspectors/contractors */
+  is_active?: boolean
+  created_at: string
+}
+
+/** Row from public.inspectors table */
+export interface Inspector {
+  id: string
+  full_name: string
+  email?: string
+  phone?: string
+  is_active: boolean
+  auth_user_id?: string
+  created_by?: string
+  created_at: string
+}
+
+/** Row from public.contractors table */
+export interface Contractor {
+  id: string
+  full_name: string
+  company_name?: string
+  trade_type?: TradeType
+  email?: string
+  phone?: string
+  is_active: boolean
+  auth_user_id?: string
+  created_by?: string
   created_at: string
 }
 
@@ -57,12 +89,11 @@ export interface PLO {
   notes?: string
   homeowner_signature?: string
   inspector_signature?: string
-  report_sent_at?: string
   /** Room name → inspector marked complete (see migration `rooms_completed`). */
   rooms_completed?: Record<string, boolean>
   created_at: string
   property?: Property
-  inspector?: Profile
+  inspector?: Inspector
 }
 
 export type Room =
@@ -140,6 +171,7 @@ export interface WorkOrder {
   id: string
   work_order_id: string
   plo_id: string
+  assigned_contractor_id?: string
   status: 'Open' | 'In Progress' | 'Closed'
   created_at: string
   plo?: PLO

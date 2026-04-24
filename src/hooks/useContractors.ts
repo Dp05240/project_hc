@@ -1,32 +1,34 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { getAdminClient } from '@/lib/supabase-admin'
 import { supabase } from '@/lib/supabase'
-import type { Inspector } from '@/lib/types'
+import type { Contractor } from '@/lib/types'
 
-const QK = ['inspectors']
-const QK_ACTIVE = ['inspectors', 'active']
+const QK = ['contractors']
+const QK_ACTIVE = ['contractors', 'active']
 
-async function fetchInspectors(activeOnly?: boolean): Promise<Inspector[]> {
-  let q = supabase.from('inspectors').select('*').order('full_name', { ascending: true })
+async function fetchContractors(activeOnly?: boolean): Promise<Contractor[]> {
+  let q = supabase.from('contractors').select('*').order('full_name', { ascending: true })
   if (activeOnly) q = q.eq('is_active', true)
   const { data, error } = await q
   if (error) throw error
-  return (data ?? []) as Inspector[]
+  return (data ?? []) as Contractor[]
 }
 
-export function useInspectors() {
-  return useQuery({ queryKey: QK, queryFn: () => fetchInspectors() })
+export function useContractors() {
+  return useQuery({ queryKey: QK, queryFn: () => fetchContractors() })
 }
 
-export function useActiveInspectors() {
-  return useQuery({ queryKey: QK_ACTIVE, queryFn: () => fetchInspectors(true) })
+export function useActiveContractors() {
+  return useQuery({ queryKey: QK_ACTIVE, queryFn: () => fetchContractors(true) })
 }
 
-export function useCreateInspector() {
+export function useCreateContractor() {
   const qc = useQueryClient()
   return useMutation({
     mutationFn: async (payload: {
       full_name: string
+      company_name?: string
+      trade_type?: string
       email?: string
       phone?: string
       created_by: string
@@ -38,16 +40,18 @@ export function useCreateInspector() {
         const admin = getAdminClient()
         const { data: authData, error: authErr } = await admin.auth.admin.createUser({
           email: payload.email,
-          password: 'inspect2024',
+          password: 'contract2024',
           email_confirm: true,
-          user_metadata: { full_name: payload.full_name, role: 'inspector' },
+          user_metadata: { full_name: payload.full_name, role: 'contractor' },
         })
         if (authErr) throw new Error(`Auth user creation failed: ${authErr.message}`)
         auth_user_id = authData.user?.id ?? null
       }
 
-      const { error } = await supabase.from('inspectors').insert({
+      const { error } = await supabase.from('contractors').insert({
         full_name: payload.full_name,
+        company_name: payload.company_name ?? null,
+        trade_type: payload.trade_type ?? null,
         email: payload.email ?? null,
         phone: payload.phone ?? null,
         created_by: payload.created_by,
@@ -63,11 +67,11 @@ export function useCreateInspector() {
   })
 }
 
-export function useUpdateInspector() {
+export function useUpdateContractor() {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: async ({ id, ...patch }: Partial<Inspector> & { id: string }) => {
-      const { error } = await supabase.from('inspectors').update(patch).eq('id', id)
+    mutationFn: async ({ id, ...patch }: Partial<Contractor> & { id: string }) => {
+      const { error } = await supabase.from('contractors').update(patch).eq('id', id)
       if (error) throw error
     },
     onSuccess: () => {

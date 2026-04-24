@@ -28,9 +28,8 @@ export function useDashboardStats() {
           .from('plos')
           .select('id', { count: 'exact', head: true })
           .eq('status', 'Closed')
-          .not('report_sent_at', 'is', null)
-          .gte('report_sent_at', monthStart)
-          .lte('report_sent_at', monthEnd),
+          .gte('created_at', monthStart)
+          .lte('created_at', monthEnd),
       ])
 
       const firstError =

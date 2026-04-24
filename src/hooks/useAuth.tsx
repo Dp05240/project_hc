@@ -31,18 +31,31 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null)
 
 async function fetchProfile(userId: string): Promise<Profile | null> {
-  const { data, error } = await supabase
+  // 1. Check profiles table (property_manager) — keyed by auth user id
+  const { data: pm } = await supabase
     .from('profiles')
     .select('*')
     .eq('id', userId)
     .maybeSingle()
+  if (pm) return pm as Profile
 
-  if (error) {
-    console.error('Failed to load profile', error)
-    return null
-  }
+  // 2. Check inspectors table — keyed by auth_user_id
+  const { data: insp } = await supabase
+    .from('inspectors')
+    .select('*')
+    .eq('auth_user_id', userId)
+    .maybeSingle()
+  if (insp) return { ...(insp as object), role: 'inspector' } as Profile
 
-  return data as Profile | null
+  // 3. Check contractors table — keyed by auth_user_id
+  const { data: cont } = await supabase
+    .from('contractors')
+    .select('*')
+    .eq('auth_user_id', userId)
+    .maybeSingle()
+  if (cont) return { ...(cont as object), role: 'contractor' } as Profile
+
+  return null
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {

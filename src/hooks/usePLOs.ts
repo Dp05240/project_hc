@@ -1,18 +1,18 @@
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-import type { PLO, Profile, Property } from '@/lib/types'
+import type { Inspector, PLO, Property } from '@/lib/types'
 
 function mapPloRows(
   plos: PLO[],
   properties: Property[],
-  profiles: Profile[],
+  inspectors: Inspector[],
 ): PLO[] {
   const propById = new Map(properties.map((p) => [p.id, p]))
-  const profById = new Map(profiles.map((p) => [p.id, p]))
+  const inspById = new Map(inspectors.map((i) => [i.id, i]))
   return plos.map((plo) => ({
     ...plo,
     property: propById.get(plo.property_id),
-    inspector: plo.assigned_inspector_id ? profById.get(plo.assigned_inspector_id) : undefined,
+    inspector: plo.assigned_inspector_id ? inspById.get(plo.assigned_inspector_id) : undefined,
   }))
 }
 
@@ -31,23 +31,23 @@ async function fetchPlosWithRelations(filterPropertyId?: string): Promise<PLO[]>
     ...new Set(list.map((p) => p.assigned_inspector_id).filter((id): id is string => Boolean(id))),
   ]
 
-  const [{ data: properties, error: pe }, { data: profiles, error: fe }] = await Promise.all([
+  const [{ data: properties, error: pe }, { data: inspectors, error: ie }] = await Promise.all([
     supabase.from('properties').select('*').in('id', propIds),
     inspectorIds.length
-      ? supabase.from('profiles').select('*').in('id', inspectorIds)
-      : Promise.resolve({ data: [] as Profile[], error: null }),
+      ? supabase.from('inspectors').select('*').in('id', inspectorIds)
+      : Promise.resolve({ data: [] as Inspector[], error: null }),
   ])
 
   if (pe) throw pe
-  if (fe) throw fe
+  if (ie) throw ie
 
-  return mapPloRows(list, (properties ?? []) as Property[], (profiles ?? []) as Profile[])
+  return mapPloRows(list, (properties ?? []) as Property[], (inspectors ?? []) as Inspector[])
 }
 
-/** All PLOs for builder dashboards / lists (RLS should scope to allowed rows). */
+/** All PLOs for property manager dashboards / lists. */
 export function useBuilderPloRows() {
   return useQuery({
-    queryKey: ['plos', 'list', 'builder'],
+    queryKey: ['plos', 'list', 'pm'],
     queryFn: () => fetchPlosWithRelations(),
   })
 }
@@ -71,15 +71,15 @@ export function usePlo(id: string | undefined) {
       const [{ data: property, error: pe }, inspectorRes] = await Promise.all([
         supabase.from('properties').select('*').eq('id', base.property_id).single(),
         base.assigned_inspector_id
-          ? supabase.from('profiles').select('*').eq('id', base.assigned_inspector_id).single()
-          : Promise.resolve({ data: null as Profile | null, error: null }),
+          ? supabase.from('inspectors').select('*').eq('id', base.assigned_inspector_id).single()
+          : Promise.resolve({ data: null as Inspector | null, error: null }),
       ])
       if (pe) throw pe
       if (inspectorRes.error) throw inspectorRes.error
       return {
         ...base,
         property: property as Property,
-        inspector: (inspectorRes.data ?? undefined) as Profile | undefined,
+        inspector: (inspectorRes.data ?? undefined) as Inspector | undefined,
       }
     },
   })
