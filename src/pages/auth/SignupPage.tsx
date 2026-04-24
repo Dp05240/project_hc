@@ -17,16 +17,16 @@ const signupSchema = z.object({
   full_name: z.string().min(2, 'Enter your full name'),
   email: z.string().email('Enter a valid email'),
   password: z.string().min(6, 'Use at least 6 characters'),
-  role: z.enum(['builder', 'inspector']),
+  role: z.enum(['property_manager', 'inspector']),
 })
 
 type SignupForm = z.infer<typeof signupSchema>
 
 const roleCards: { role: UserRole; title: string; description: string; icon: typeof Building2 }[] = [
   {
-    role: 'builder',
-    title: 'Builder / Manager',
-    description: 'Manage properties and view reports',
+    role: 'property_manager' as UserRole,
+    title: 'Property Manager',
+    description: 'Manage properties, PLOs and work orders',
     icon: Building2,
   },
   {
@@ -54,13 +54,13 @@ export function SignupPage() {
       full_name: '',
       email: '',
       password: '',
-      role: 'builder',
+      role: 'property_manager',
     },
   })
 
   useEffect(() => {
     if (!loading && user && profile) {
-      navigate(profile.role === 'builder' ? '/builder' : '/inspector', { replace: true })
+      navigate(profile.role === 'property_manager' ? '/property-manager' : profile.role === 'contractor' ? '/contractor' : '/inspector', { replace: true })
     }
   }, [user, profile, loading, navigate])
 

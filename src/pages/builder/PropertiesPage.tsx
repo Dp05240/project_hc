@@ -45,7 +45,7 @@ export function PropertiesPage() {
           <button
             key={p.id}
             type="button"
-            onClick={() => navigate(`/builder/properties/${p.id}`)}
+            onClick={() => navigate(`/property-manager/properties/${p.id}`)}
             className="text-left transition-all duration-150"
           >
             <Card className="h-full cursor-pointer transition-all duration-150 hover:shadow-md">
@@ -87,7 +87,7 @@ export function PropertiesPage() {
       <PageHeader
         title="Properties"
         actions={
-          <Link to="/builder/properties/new" className={cn(buttonVariants({ variant: 'secondary' }))}>
+          <Link to="/property-manager/properties/new" className={cn(buttonVariants({ variant: 'secondary' }))}>
             + New Property
           </Link>
         }
@@ -129,7 +129,7 @@ export function PropertiesPage() {
             title="No properties yet"
             description="Add a lot to start tracking walkthroughs and PLOs."
             action={
-              <Link to="/builder/properties/new" className={cn(buttonVariants({ variant: 'primary' }))}>
+              <Link to="/property-manager/properties/new" className={cn(buttonVariants({ variant: 'primary' }))}>
                 + New Property
               </Link>
             }

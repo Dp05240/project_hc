@@ -14,6 +14,8 @@ interface BuilderPloTableProps {
   emptyTitle?: string
   emptyDescription?: string
   emptyAction?: ReactNode
+  hideNew?: boolean
+  basePath?: string
 }
 
 export function BuilderPloTable({
@@ -22,8 +24,11 @@ export function BuilderPloTable({
   emptyTitle = 'No PLOs yet',
   emptyDescription = 'Create your first punch list order to get started.',
   emptyAction,
+  hideNew = false,
+  basePath = '/property-manager',
 }: BuilderPloTableProps) {
   const navigate = useNavigate()
+  void hideNew
 
   if (isLoading) {
     return (
@@ -78,7 +83,7 @@ export function BuilderPloTable({
             <tr
               key={plo.id}
               className="cursor-pointer border-b border-border transition-colors duration-150 last:border-0 hover:bg-gray-50"
-              onClick={() => navigate(`/builder/plos/${plo.id}`)}
+              onClick={() => navigate(`${basePath}/plos/${plo.id}`)}
             >
               <td className="px-4 py-3">
                 <span className="font-medium text-accent">{plo.plo_id}</span>
@@ -106,7 +111,7 @@ export function BuilderPloTable({
 export function NewPloEmptyButton() {
   const navigate = useNavigate()
   return (
-    <Button type="button" variant="accent" onClick={() => navigate('/builder/plos/new')}>
+    <Button type="button" variant="accent" onClick={() => navigate('/property-manager/plos/new')}>
       Create your first PLO
     </Button>
   )

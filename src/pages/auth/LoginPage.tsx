@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { useAuth } from '@/hooks/useAuth'
 import { Button } from '@/components/ui/Button'
@@ -35,7 +35,7 @@ export function LoginPage() {
 
   useEffect(() => {
     if (!loading && user && profile) {
-      navigate(profile.role === 'builder' ? '/builder' : '/inspector', { replace: true })
+      navigate(profile.role === 'property_manager' ? '/property-manager' : profile.role === 'contractor' ? '/contractor' : '/inspector', { replace: true })
     }
   }, [user, profile, loading, navigate])
 
@@ -49,7 +49,7 @@ export function LoginPage() {
       setError('root', { message: 'Profile not found. Contact your administrator.' })
       return
     }
-    navigate(nextProfile.role === 'builder' ? '/builder' : '/inspector', { replace: true })
+    navigate(nextProfile.role === 'property_manager' ? '/property-manager' : nextProfile.role === 'contractor' ? '/contractor' : '/inspector', { replace: true })
   })
 
   return (
@@ -89,15 +89,9 @@ export function LoginPage() {
               Sign in
             </Button>
           </form>
-          <p className="mt-6 text-center text-sm text-foreground-secondary">
-            No account?{' '}
-            <Link className="font-medium text-navy underline-offset-4 hover:underline" to="/signup">
-              Create one
-            </Link>
-          </p>
           <div className="mt-10 space-y-1 rounded-lg border border-dashed border-border bg-surface/80 px-4 py-3 text-center text-xs text-foreground-muted">
             <p className="font-medium text-foreground-secondary">Demo accounts</p>
-            <p>builder@projecthc.demo / demo1234</p>
+            <p>manager@projecthc.demo / demo1234</p>
             <p>inspector@projecthc.demo / demo1234</p>
           </div>
         </CardContent>

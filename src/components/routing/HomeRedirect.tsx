@@ -17,5 +17,5 @@ export function HomeRedirect() {
     return <Navigate to="/login" replace />
   }
 
-  return <Navigate to={profile.role === 'builder' ? '/builder' : '/inspector'} replace />
+  return <Navigate to={profile.role === 'property_manager' ? '/property-manager' : profile.role === 'contractor' ? '/contractor' : '/inspector'} replace />
 }

@@ -1,11 +1,9 @@
 import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { useBuilderPloRows } from '@/hooks/usePLOs'
-import { cn } from '@/lib/utils'
 import type { PLOStatus } from '@/lib/types'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { BuilderPloTable } from '@/components/builder/BuilderPloTable'
-import { Button, buttonVariants } from '@/components/ui/Button'
+import { Button } from '@/components/ui/Button'
 import { Select } from '@/components/ui/Select'
 
 const STATUS_FILTER_OPTIONS: Array<{ value: '' | PLOStatus; label: string }> = [
@@ -16,7 +14,7 @@ const STATUS_FILTER_OPTIONS: Array<{ value: '' | PLOStatus; label: string }> = [
   { value: 'Closed', label: 'Closed' },
 ]
 
-export function PLOsPage() {
+export function ContractorPLOsPage() {
   const [statusFilter, setStatusFilter] = useState<'' | PLOStatus>('')
   const { data: allPlos = [], isLoading, error, refetch } = useBuilderPloRows()
 
@@ -27,14 +25,7 @@ export function PLOsPage() {
 
   return (
     <>
-      <PageHeader
-        title="Punch list orders"
-        actions={
-          <Link to="/property-manager/plos/new" className={cn(buttonVariants({ variant: 'accent' }))}>
-            + New PLO
-          </Link>
-        }
-      />
+      <PageHeader title="Punch list orders" subtitle="View only" />
 
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-foreground-secondary">Filter by status</p>
@@ -45,9 +36,7 @@ export function PLOsPage() {
           aria-label="Filter by status"
         >
           {STATUS_FILTER_OPTIONS.map((o) => (
-            <option key={o.label} value={o.value}>
-              {o.label}
-            </option>
+            <option key={o.label} value={o.value}>{o.label}</option>
           ))}
         </Select>
       </div>
@@ -55,14 +44,11 @@ export function PLOsPage() {
       {error ? (
         <div className="mb-6 rounded-xl border border-danger/30 bg-red-50 px-4 py-3 text-sm text-danger">
           <p className="font-medium">Could not load PLOs.</p>
-          <p className="mt-1 text-foreground-secondary">{error.message}</p>
-          <Button type="button" variant="secondary" className="mt-3" onClick={() => void refetch()}>
-            Retry
-          </Button>
+          <Button type="button" variant="secondary" className="mt-3" onClick={() => void refetch()}>Retry</Button>
         </div>
       ) : null}
 
-      <BuilderPloTable plos={filtered} isLoading={isLoading} />
+      <BuilderPloTable plos={filtered} isLoading={isLoading} hideNew basePath="/contractor" />
     </>
   )
 }

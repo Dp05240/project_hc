@@ -23,7 +23,7 @@ export function PropertyDetailPage() {
     return (
       <div className="space-y-4">
         <Link
-          to="/builder/properties"
+          to="/property-manager/properties"
           className="inline-flex min-h-12 items-center gap-2 text-sm font-medium text-foreground-secondary hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -45,7 +45,7 @@ export function PropertyDetailPage() {
     <>
       <div className="mb-6">
         <Link
-          to="/builder/properties"
+          to="/property-manager/properties"
           className="inline-flex min-h-12 items-center gap-2 text-sm font-medium text-foreground-secondary hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -91,7 +91,7 @@ export function PropertyDetailPage() {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="text-lg font-semibold text-foreground">Punch list orders</h2>
           <Link
-            to={`/builder/plos/new?property=${encodeURIComponent(p.id)}`}
+            to={`/property-manager/plos/new?property=${encodeURIComponent(p.id)}`}
             className={cn(buttonVariants({ variant: 'accent' }), 'sm:self-start')}
           >
             + New PLO
@@ -103,7 +103,7 @@ export function PropertyDetailPage() {
           emptyTitle="No PLOs for this property"
           emptyDescription="Create a punch list order to schedule an inspection."
           emptyAction={
-            <Link to={`/builder/plos/new?property=${encodeURIComponent(p.id)}`} className={cn(buttonVariants({ variant: 'accent' }))}>
+            <Link to={`/property-manager/plos/new?property=${encodeURIComponent(p.id)}`} className={cn(buttonVariants({ variant: 'accent' }))}>
               + New PLO
             </Link>
           }

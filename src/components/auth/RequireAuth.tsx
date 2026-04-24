@@ -9,6 +9,12 @@ interface RequireAuthProps {
   children: ReactNode
 }
 
+function roleHome(role: string): string {
+  if (role === 'property_manager') return '/property-manager'
+  if (role === 'contractor') return '/contractor'
+  return '/inspector'
+}
+
 export function RequireAuth({ allowedRole, children }: RequireAuthProps) {
   const { user, profile, loading } = useAuth()
 
@@ -25,7 +31,7 @@ export function RequireAuth({ allowedRole, children }: RequireAuthProps) {
   }
 
   if (allowedRole && profile.role !== allowedRole) {
-    return <Navigate to={profile.role === 'builder' ? '/builder' : '/inspector'} replace />
+    return <Navigate to={roleHome(profile.role)} replace />
   }
 
   return <>{children}</>

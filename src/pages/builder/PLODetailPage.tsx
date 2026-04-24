@@ -1,6 +1,7 @@
 import { AlertTriangle, ArrowLeft, ClipboardList } from 'lucide-react'
 import { useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { usePlo } from '@/hooks/usePLOs'
 import { usePloInspectionItems } from '@/hooks/useInspectionItems'
 import { formatPloScheduledDisplay } from '@/lib/plo-format'
@@ -13,6 +14,8 @@ import { EmptyState } from '@/components/shared/EmptyState'
 import { LoadingState } from '@/components/shared/LoadingState'
 import { StatCard } from '@/components/shared/StatCard'
 import { PloStatusBadge } from '@/components/builder/PloStatusBadge'
+import { useToast } from '@/components/ui/Toast'
+import { supabase } from '@/lib/supabase'
 
 const ROOM_ORDER: Room[] = [
   'Kitchen',
@@ -44,9 +47,26 @@ export function PLODetailPage() {
   const { id } = useParams()
   const ploQuery = usePlo(id)
   const itemsQuery = usePloInspectionItems(id)
+  const queryClient = useQueryClient()
+  const { toast } = useToast()
 
   const plo = ploQuery.data
   const items = useMemo(() => itemsQuery.data ?? [], [itemsQuery.data])
+
+  const reviewMutation = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.from('plos').update({ status: 'Under Review' }).eq('id', id!)
+      if (error) throw error
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['plos', 'detail', id] })
+      await queryClient.invalidateQueries({ queryKey: ['plos'] })
+      toast({ title: 'PLO submitted for review. Work order created automatically.' })
+    },
+    onError: (e: Error) => {
+      toast({ title: 'Could not update status', description: e.message, variant: 'destructive' })
+    },
+  })
 
   const stats = useMemo(() => {
     const openish = (i: InspectionItem) => i.item_status !== 'Resolved'
@@ -85,21 +105,31 @@ export function PLODetailPage() {
     <>
       <div className="mb-6 flex flex-col gap-4 print:hidden sm:flex-row sm:items-center sm:justify-between">
         <Link
-          to="/builder/plos"
+          to="/property-manager/plos"
           className="inline-flex min-h-12 items-center gap-2 text-sm font-medium text-foreground-secondary hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
           All PLOs
         </Link>
         <div className="flex flex-wrap gap-2">
+          {plo.status === 'In Progress' ? (
+            <Button
+              type="button"
+              variant="accent"
+              loading={reviewMutation.isPending}
+              onClick={() => reviewMutation.mutate()}
+            >
+              Submit for Review
+            </Button>
+          ) : null}
           <Link
-            to={`/builder/plos/${plo.id}/workorder`}
+            to={`/property-manager/plos/${plo.id}/workorder`}
             className={cn(buttonVariants({ variant: 'secondary' }))}
           >
             Work order
           </Link>
           {plo.status === 'Closed' ? (
-            <Link to={`/builder/plos/${plo.id}/report`} className={cn(buttonVariants({ variant: 'primary' }))}>
+            <Link to={`/property-manager/plos/${plo.id}/report`} className={cn(buttonVariants({ variant: 'primary' }))}>
               View report
             </Link>
           ) : null}

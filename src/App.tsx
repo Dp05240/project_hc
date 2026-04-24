@@ -13,9 +13,13 @@ import { PropertiesPage } from '@/pages/builder/PropertiesPage'
 import { PropertyDetailPage } from '@/pages/builder/PropertyDetailPage'
 import { ReportPage } from '@/pages/builder/ReportPage'
 import { WorkOrderPage } from '@/pages/builder/WorkOrderPage'
+import { WorkOrdersListPage } from '@/pages/builder/WorkOrdersListPage'
 import { CompleteInspectionPage } from '@/pages/inspector/CompleteInspectionPage'
 import { InspectionPage } from '@/pages/inspector/InspectionPage'
 import { InspectorDashboard } from '@/pages/inspector/InspectorDashboard'
+import { ContractorWorkOrdersPage } from '@/pages/contractor/ContractorWorkOrdersPage'
+import { ContractorPLOsPage } from '@/pages/contractor/ContractorPLOsPage'
+import { ContractorPLODetailPage } from '@/pages/contractor/ContractorPLODetailPage'
 import { NotFoundPage } from '@/pages/shared/NotFoundPage'
 import { QRScanPage } from '@/pages/shared/QRScanPage'
 
@@ -26,10 +30,11 @@ export default function App() {
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/" element={<HomeRedirect />} />
 
+      {/* ── Property Manager ────────────────────────────────────── */}
       <Route
-        path="/builder"
+        path="/property-manager"
         element={
-          <RequireAuth allowedRole="builder">
+          <RequireAuth allowedRole="property_manager">
             <AppLayout />
           </RequireAuth>
         }
@@ -43,8 +48,10 @@ export default function App() {
         <Route path="plos/:id" element={<PLODetailPage />} />
         <Route path="plos/:id/workorder" element={<WorkOrderPage />} />
         <Route path="plos/:id/report" element={<ReportPage />} />
+        <Route path="work-orders" element={<WorkOrdersListPage />} />
       </Route>
 
+      {/* ── Inspector ───────────────────────────────────────────── */}
       <Route
         path="/inspector"
         element={
@@ -72,7 +79,6 @@ export default function App() {
           </RequireAuth>
         }
       />
-
       <Route
         path="/scan"
         element={
@@ -81,6 +87,21 @@ export default function App() {
           </RequireAuth>
         }
       />
+
+      {/* ── Contractor (view-only) ───────────────────────────────── */}
+      <Route
+        path="/contractor"
+        element={
+          <RequireAuth allowedRole="contractor">
+            <AppLayout />
+          </RequireAuth>
+        }
+      >
+        <Route index element={<ContractorWorkOrdersPage />} />
+        <Route path="work-orders" element={<ContractorWorkOrdersPage />} />
+        <Route path="plos" element={<ContractorPLOsPage />} />
+        <Route path="plos/:id" element={<ContractorPLODetailPage />} />
+      </Route>
 
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

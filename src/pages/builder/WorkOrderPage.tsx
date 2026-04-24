@@ -36,7 +36,7 @@ export function WorkOrderPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4 print:hidden">
         <Link
-          to={`/builder/plos/${plo.id}`}
+          to={`/property-manager/plos/${plo.id}`}
           className="inline-flex min-h-12 items-center gap-2 text-sm font-medium text-foreground-secondary hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />

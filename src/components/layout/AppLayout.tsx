@@ -2,6 +2,7 @@ import {
   Building2,
   Calendar,
   ClipboardList,
+  Briefcase,
   LayoutDashboard,
   LogOut,
   QrCode,
@@ -27,61 +28,40 @@ function NavItems({ role, mobile }: { role: UserRole; mobile: boolean }) {
   const activeMobile = 'text-accent'
   const inactiveMobile = 'text-foreground-secondary'
 
-  if (role === 'builder') {
+  const cls = ({ isActive }: { isActive: boolean }) =>
+    cn(base, mobile ? (isActive ? activeMobile : inactiveMobile) : isActive ? activeDesktop : inactiveDesktop)
+
+  if (role === 'property_manager') {
     return (
       <>
-        <NavLink
-          to="/builder"
-          end
-          className={({ isActive }) =>
-            cn(
-              base,
-              mobile
-                ? isActive
-                  ? activeMobile
-                  : inactiveMobile
-                : isActive
-                  ? activeDesktop
-                  : inactiveDesktop,
-            )
-          }
-        >
+        <NavLink to="/property-manager" end className={cls}>
           <LayoutDashboard className="h-5 w-5 shrink-0" />
           <span>Dashboard</span>
         </NavLink>
-        <NavLink
-          to="/builder/properties"
-          className={({ isActive }) =>
-            cn(
-              base,
-              mobile
-                ? isActive
-                  ? activeMobile
-                  : inactiveMobile
-                : isActive
-                  ? activeDesktop
-                  : inactiveDesktop,
-            )
-          }
-        >
+        <NavLink to="/property-manager/properties" className={cls}>
           <Building2 className="h-5 w-5 shrink-0" />
           <span>Properties</span>
         </NavLink>
-        <NavLink
-          to="/builder/plos"
-          className={({ isActive }) =>
-            cn(
-              base,
-              mobile
-                ? isActive
-                  ? activeMobile
-                  : inactiveMobile
-                : isActive
-                  ? activeDesktop
-                  : inactiveDesktop,
-            )
-          }
-        >
+        <NavLink to="/property-manager/plos" className={cls}>
+          <ClipboardList className="h-5 w-5 shrink-0" />
+          <span>PLOs</span>
+        </NavLink>
+        <NavLink to="/property-manager/work-orders" className={cls}>
+          <Briefcase className="h-5 w-5 shrink-0" />
+          <span>Work Orders</span>
+        </NavLink>
+      </>
+    )
+  }
+
+  if (role === 'contractor') {
+    return (
+      <>
+        <NavLink to="/contractor/work-orders" className={cls}>
+          <Briefcase className="h-5 w-5 shrink-0" />
+          <span>Work Orders</span>
+        </NavLink>
+        <NavLink to="/contractor/plos" className={cls}>
           <ClipboardList className="h-5 w-5 shrink-0" />
           <span>PLOs</span>
         </NavLink>
@@ -91,40 +71,11 @@ function NavItems({ role, mobile }: { role: UserRole; mobile: boolean }) {
 
   return (
     <>
-      <NavLink
-        to="/inspector"
-        end
-        className={({ isActive }) =>
-          cn(
-            base,
-            mobile
-              ? isActive
-                ? activeMobile
-                : inactiveMobile
-              : isActive
-                ? activeDesktop
-                : inactiveDesktop,
-          )
-        }
-      >
+      <NavLink to="/inspector" end className={cls}>
         <Calendar className="h-5 w-5 shrink-0" />
         <span>My Jobs</span>
       </NavLink>
-      <NavLink
-        to="/scan"
-        className={({ isActive }) =>
-          cn(
-            base,
-            mobile
-              ? isActive
-                ? activeMobile
-                : inactiveMobile
-              : isActive
-                ? activeDesktop
-                : inactiveDesktop,
-          )
-        }
-      >
+      <NavLink to="/scan" className={cls}>
         <QrCode className="h-5 w-5 shrink-0" />
         <span>Scan QR</span>
       </NavLink>
@@ -144,6 +95,8 @@ export function AppLayout() {
     await signOut()
     navigate('/login', { replace: true })
   }
+
+  const isPm = profile.role === 'property_manager'
 
   return (
     <div className="min-h-svh bg-background">
@@ -166,7 +119,7 @@ export function AppLayout() {
             <div className="min-w-0">
               <p className="truncate text-sm font-medium text-foreground">{profile.full_name}</p>
               <Badge variant="secondary" className="mt-1 capitalize">
-                {profile.role}
+                {profile.role.replace('_', ' ')}
               </Badge>
             </div>
           </div>
@@ -181,7 +134,7 @@ export function AppLayout() {
         <div
           className={cn(
             'mx-auto w-full px-6 py-8 print:px-4 print:py-4 md:px-8',
-            profile.role === 'builder' ? 'max-w-[900px]' : 'max-w-content',
+            isPm ? 'max-w-[900px]' : 'max-w-content',
           )}
         >
           <Outlet />
@@ -192,7 +145,7 @@ export function AppLayout() {
         <div
           className={cn(
             'mx-auto flex justify-between gap-1',
-            profile.role === 'builder' ? 'max-w-[900px]' : 'max-w-content',
+            isPm ? 'max-w-[900px]' : 'max-w-content',
           )}
         >
           <NavItems role={profile.role} mobile />

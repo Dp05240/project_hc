@@ -126,7 +126,7 @@ export function NewPLOPage() {
         queryClient.invalidateQueries({ queryKey: ['properties'] }),
       ])
       toast({ title: 'PLO created' })
-      navigate(`/builder/plos/${row.id}/workorder`, { replace: true })
+      navigate(`/property-manager/plos/${row.id}/workorder`, { replace: true })
     },
     onError: (e: Error) => {
       toast({
@@ -151,7 +151,7 @@ export function NewPLOPage() {
     <div className="mx-auto max-w-[720px]">
       <div className="mb-6">
         <Link
-          to="/builder/plos"
+          to="/property-manager/plos"
           className="inline-flex min-h-12 items-center gap-2 text-sm font-medium text-foreground-secondary transition-colors hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -299,7 +299,7 @@ export function NewPLOPage() {
         </section>
 
         <div className="flex flex-col-reverse gap-3 border-t border-border pt-6 sm:flex-row sm:justify-end">
-          <Button type="button" variant="secondary" onClick={() => navigate('/builder/plos')}>
+          <Button type="button" variant="secondary" onClick={() => navigate('/property-manager/plos')}>
             Cancel
           </Button>
           <Button

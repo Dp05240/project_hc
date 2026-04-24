@@ -1,4 +1,4 @@
-export type UserRole = 'builder' | 'inspector'
+export type UserRole = 'property_manager' | 'inspector' | 'contractor'
 
 export interface Profile {
   id: string
@@ -134,4 +134,13 @@ export interface InspectionItem {
   /** Sort order within a room (see migration `line_order`). */
   line_order?: number
   created_at: string
+}
+
+export interface WorkOrder {
+  id: string
+  work_order_id: string
+  plo_id: string
+  status: 'Open' | 'In Progress' | 'Closed'
+  created_at: string
+  plo?: PLO
 }

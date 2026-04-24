@@ -81,7 +81,7 @@ export function NewPropertyPage() {
       await queryClient.invalidateQueries({ queryKey: ['properties'] })
       await queryClient.invalidateQueries({ queryKey: ['dashboard-stats'] })
       toast({ title: 'Property saved' })
-      navigate('/builder/properties', { replace: true })
+      navigate('/property-manager/properties', { replace: true })
     },
     onError: (e: Error) => {
       toast({
@@ -96,7 +96,7 @@ export function NewPropertyPage() {
     <div className="mx-auto max-w-[640px]">
       <div className="mb-6">
         <Link
-          to="/builder/properties"
+          to="/property-manager/properties"
           className="inline-flex min-h-12 items-center gap-2 text-sm font-medium text-foreground-secondary transition-colors hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -190,7 +190,7 @@ export function NewPropertyPage() {
             </section>
 
             <div className="flex flex-col-reverse gap-3 border-t border-border pt-6 sm:flex-row sm:justify-end">
-              <Button type="button" variant="secondary" onClick={() => navigate('/builder/properties')}>
+              <Button type="button" variant="secondary" onClick={() => navigate('/property-manager/properties')}>
                 Cancel
               </Button>
               <Button type="submit" loading={isSubmitting || saveMutation.isPending}>

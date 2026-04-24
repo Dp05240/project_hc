@@ -27,12 +27,12 @@ export function BuilderDashboard() {
         actions={
           <div className="flex flex-wrap gap-2">
             <Link
-              to="/builder/properties/new"
+              to="/property-manager/properties/new"
               className={cn(buttonVariants({ variant: 'secondary' }))}
             >
               + New Property
             </Link>
-            <Link to="/builder/plos/new" className={cn(buttonVariants({ variant: 'accent' }))}>
+            <Link to="/property-manager/plos/new" className={cn(buttonVariants({ variant: 'accent' }))}>
               + New PLO
             </Link>
           </div>
