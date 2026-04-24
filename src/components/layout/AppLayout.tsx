@@ -178,13 +178,23 @@ export function AppLayout() {
       </aside>
 
       <main className="pb-24 md:ml-60 md:pb-0 print:ml-0 print:pb-0">
-        <div className="mx-auto w-full max-w-content px-6 py-8 print:px-4 print:py-4 md:px-8">
+        <div
+          className={cn(
+            'mx-auto w-full px-6 py-8 print:px-4 print:py-4 md:px-8',
+            profile.role === 'builder' ? 'max-w-[900px]' : 'max-w-content',
+          )}
+        >
           <Outlet />
         </div>
       </main>
 
       <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-white px-2 py-2 print:hidden md:hidden">
-        <div className="mx-auto flex max-w-content justify-between gap-1">
+        <div
+          className={cn(
+            'mx-auto flex justify-between gap-1',
+            profile.role === 'builder' ? 'max-w-[900px]' : 'max-w-content',
+          )}
+        >
           <NavItems role={profile.role} mobile />
         </div>
       </nav>
