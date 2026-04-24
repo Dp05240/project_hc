@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
 import { useInspectorSchedule } from '@/hooks/useInspectorSchedule'
-import { formatPloScheduledDisplay } from '@/lib/plo-format'
+import { formatPloScheduleForJobCard, formatPloScheduledDisplay } from '@/lib/plo-format'
 import type { PLO } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { PloStatusBadge } from '@/components/builder/PloStatusBadge'
@@ -54,6 +54,7 @@ export function InspectorDashboard() {
   const upcomingDateKeys = useMemo(() => [...upcomingByDate.keys()].sort(), [upcomingByDate])
 
   const todayLabel = format(new Date(), 'EEEE, MMMM d, yyyy')
+  const displayName = profile?.full_name ? firstName(profile.full_name) : ''
 
   if (schedule.isLoading) {
     return <LoadingState className="min-h-[40vh]" label="Loading your schedule…" />
@@ -69,10 +70,10 @@ export function InspectorDashboard() {
 
   return (
     <div className="space-y-10">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div>
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
           <h1 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
-            Good morning{profile?.full_name ? `, ${firstName(profile.full_name)}` : ''}
+            Good morning{displayName ? ` ${displayName}` : ''}
           </h1>
           <p className="mt-1 text-sm text-foreground-secondary">{todayLabel}</p>
         </div>
@@ -80,11 +81,12 @@ export function InspectorDashboard() {
           to="/scan"
           className={cn(
             buttonVariants({ variant: 'accent', size: 'lg' }),
-            'inline-flex min-h-14 w-full items-center justify-center gap-2 sm:w-auto sm:min-w-[200px]',
+            'inline-flex min-h-14 shrink-0 items-center justify-center gap-2 px-4',
           )}
+          aria-label="Scan QR code"
         >
           <QrCode className="h-6 w-6" />
-          Scan QR
+          <span>Scan QR</span>
         </Link>
       </div>
 
@@ -98,7 +100,7 @@ export function InspectorDashboard() {
           <ul className="flex flex-col gap-4">
             {todayJobs.map((plo) => (
               <li key={plo.id}>
-                <JobCard plo={plo} />
+                <JobCard plo={plo} todayIsoDate={todayStr} />
               </li>
             ))}
           </ul>
@@ -106,7 +108,7 @@ export function InspectorDashboard() {
       </section>
 
       <section className="space-y-4">
-        <h2 className="text-lg font-semibold text-foreground">Upcoming</h2>
+        <h2 className="text-lg font-semibold text-foreground">Upcoming jobs (next 7 days)</h2>
         {upcomingDateKeys.length === 0 ? (
           <p className="text-sm text-foreground-secondary">No upcoming jobs in the next 7 days.</p>
         ) : (
@@ -136,9 +138,9 @@ export function InspectorDashboard() {
   )
 }
 
-function JobCard({ plo }: { plo: PLO }) {
+function JobCard({ plo, todayIsoDate }: { plo: PLO; todayIsoDate: string }) {
   const prop = plo.property
-  const scheduleLine = formatPloScheduledDisplay(plo)
+  const scheduleLine = formatPloScheduleForJobCard(plo, todayIsoDate)
 
   return (
     <Card>
@@ -162,7 +164,7 @@ function JobCard({ plo }: { plo: PLO }) {
             'flex min-h-14 w-full items-center justify-center gap-2 text-base',
           )}
         >
-          Start inspection →
+          Start Inspection →
         </Link>
       </CardContent>
     </Card>
@@ -172,9 +174,9 @@ function JobCard({ plo }: { plo: PLO }) {
 function UpcomingCard({ plo }: { plo: PLO }) {
   const prop = plo.property
   return (
-    <Link to={`/inspect/${plo.id}`}>
+    <Link to={`/inspect/${plo.id}`} className="block min-h-14">
       <Card className="transition-all duration-150 hover:shadow-md">
-        <CardContent className="flex flex-wrap items-center justify-between gap-3 py-4">
+        <CardContent className="flex min-h-16 flex-wrap items-center justify-between gap-3 py-4">
           <div>
             <p className="font-semibold text-foreground">LOT {prop?.lot_number ?? '—'}</p>
             <p className="text-sm text-foreground-secondary">{plo.inspection_type}</p>

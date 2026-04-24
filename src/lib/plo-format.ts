@@ -1,7 +1,7 @@
 import { format, parseISO, isValid } from 'date-fns'
 import type { PLO } from '@/lib/types'
 
-function formatTimeOnly(time: string): string {
+export function formatTimeOnly(time: string): string {
   const parts = time.split(':')
   if (parts.length >= 2) {
     const h = Number.parseInt(parts[0] ?? '0', 10)
@@ -10,6 +10,15 @@ function formatTimeOnly(time: string): string {
     return format(dt, 'h:mm a')
   }
   return time
+}
+
+/** For “today” cards: show time when date is today; otherwise full schedule line. */
+export function formatPloScheduleForJobCard(plo: PLO, todayIsoDate: string): string {
+  if (!plo.scheduled_date) return '—'
+  if (plo.scheduled_date === todayIsoDate && plo.scheduled_time) {
+    return formatTimeOnly(plo.scheduled_time)
+  }
+  return formatPloScheduledDisplay(plo)
 }
 
 export function formatPloScheduledDisplay(plo: PLO): string {

@@ -11,7 +11,8 @@ export function usePloInspectionItems(ploId: string | undefined) {
         .from('inspection_items')
         .select('*')
         .eq('plo_id', ploId!)
-        .order('created_at', { ascending: false })
+        .order('line_order', { ascending: true, nullsFirst: false })
+        .order('created_at', { ascending: true })
       if (error) throw error
       return (data ?? []) as InspectionItem[]
     },

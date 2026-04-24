@@ -58,6 +58,8 @@ export interface PLO {
   homeowner_signature?: string
   inspector_signature?: string
   report_sent_at?: string
+  /** Room name → inspector marked complete (see migration `rooms_completed`). */
+  rooms_completed?: Record<string, boolean>
   created_at: string
   property?: Property
   inspector?: Profile
@@ -129,5 +131,7 @@ export interface InspectionItem {
   severity: Severity
   is_hazard: boolean
   item_status: ItemStatus
+  /** Sort order within a room (see migration `line_order`). */
+  line_order?: number
   created_at: string
 }

@@ -85,7 +85,7 @@ export function QRScanPage() {
 
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center p-6">
           <div
-            className="aspect-square w-[min(72vw,320px)] rounded-2xl border-2 border-white/50 shadow-[0_0_0_9999px_rgba(0,0,0,0.45)]"
+            className="aspect-square w-[min(72vw,320px)] rounded-2xl border-2 border-white/60 shadow-[0_0_0_9999px_rgba(0,0,0,0.72)]"
             aria-hidden
           />
         </div>
