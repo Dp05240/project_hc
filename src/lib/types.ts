@@ -78,6 +78,23 @@ export type Room =
   | 'Roof'
   | 'Other'
 
+/** Room tiles on the inspection screen (order matches walkthrough flow). */
+export const INSPECTION_ROOMS: Room[] = [
+  'Kitchen',
+  'Living Room',
+  'Master Bedroom',
+  'Bedroom 2',
+  'Bedroom 3',
+  'Bathroom',
+  'Master Bath',
+  'Laundry',
+  'Garage',
+  'Basement',
+  'Exterior',
+  'Roof',
+  'Other',
+]
+
 export type TradeType =
   | 'Painter'
   | 'Plumber'
@@ -87,6 +104,17 @@ export type TradeType =
   | 'HVAC'
   | 'Roofer'
   | 'General'
+
+export const TRADE_TYPE_OPTIONS: TradeType[] = [
+  'Painter',
+  'Plumber',
+  'Electrician',
+  'Carpenter',
+  'Hardware',
+  'HVAC',
+  'Roofer',
+  'General',
+]
 
 export type Severity = 'Low' | 'Medium' | 'Urgent'
 export type ItemStatus = 'Open' | 'In Progress' | 'Resolved'
